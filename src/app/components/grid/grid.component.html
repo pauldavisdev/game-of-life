@@ -1,0 +1,20 @@
+<table class="main-table">
+  <tbody>
+    <tr
+      *ngFor="
+        let row of grid$ | async | slice: 0:(grid$ | async).length - 1;
+        let rowIndex = index
+      "
+    >
+      <td
+        *ngFor="let cell of row; let columnIndex = index"
+        (click)="onCellClick(rowIndex, columnIndex)"
+      >
+        <div
+          *ngIf="!cell.isBoundary"
+          [ngClass]="cell.isAlive ? 'alive' : 'dead'"
+        ></div>
+      </td>
+    </tr>
+  </tbody>
+</table>

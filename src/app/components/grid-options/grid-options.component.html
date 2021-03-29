@@ -1,0 +1,157 @@
+<div class="form mt-2">
+  <div class="form-row">
+    <div class="form-group col-md-3 col-6">
+      <button
+        type="button"
+        [ngClass]="(isRunning$ | async) ? 'btn-danger' : 'btn-success'"
+        class="btn btn-sm btn-block"
+        (click)="onStartStopClicked()"
+        [disabled]="isEmpty$ | async"
+        [textContent]="(isRunning$ | async) ? 'Stop' : 'Start'"
+      ></button>
+    </div>
+    <div class="form-group col-md-3 col-6">
+      <button
+        type="button"
+        class="btn btn-primary btn-sm btn-block"
+        (click)="onClearClicked()"
+        [disabled]="isEmpty$ | async"
+        [textContent]="'Clear'"
+      ></button>
+    </div>
+    <div class="form-group col-md-3 col-6">
+      <button
+        id="randomize"
+        type="button"
+        class="align-bottom btn btn-primary btn-sm btn-block"
+        [textContent]="'Random'"
+        [disabled]="isRunning$ | async"
+        (click)="onRandomizeClicked()"
+      ></button>
+    </div>
+    <div class="form-group col-md-3 col-6">
+      <button
+        data-toggle="modal"
+        data-target="#saveGridConfigModal"
+        type="button"
+        class="btn btn-primary btn-sm btn-block"
+        [disabled]="(isRunning$ | async) || (isEmpty$ | async)"
+        [textContent]="'Save'"
+      ></button>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-3 col-4">
+      <label for="rows">Rows</label>
+      <input
+        type="number"
+        class="form-control form-control-sm position-static"
+        id="rows"
+        placeholder="Number of Rows"
+        [(ngModel)]="rowCount"
+      />
+    </div>
+    <div class="form-group col-md-3 col-4">
+      <label for="columns">Columns</label>
+      <input
+        type="number"
+        class="form-control form-control-sm position-static"
+        id="columns"
+        placeholder="Number of Columns"
+        [(ngModel)]="columnCount"
+      />
+    </div>
+    <div class="form-group col-md-6 col-4 align-self-end">
+      <button
+        id="generate"
+        type="button"
+        class="align-bottom btn btn-primary btn-sm btn-block"
+        [textContent]="'Generate Grid'"
+        [disabled]="isRunning$ | async"
+        (click)="onGenerateClicked(rowCount, columnCount)"
+      ></button>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6 col-6">
+      <label for="delay">Delay (Seconds)</label>
+      <input
+        type="number"
+        class="form-control form-control-sm position-static"
+        id="delay"
+        placeholder="Delay (Seconds)"
+        (input)="onDelayChanged($event)"
+        [(ngModel)]="delay"
+      />
+    </div>
+    <div class="form-group col-md-6 col-6">
+      <label for="stepSize">Step Size</label>
+      <input
+        id="stepSize"
+        type="number"
+        class="form-control form-control-sm position-static"
+        placeholder="Step Size"
+        (input)="onStepSizeChanged($event)"
+        [(ngModel)]="stepSize"
+      />
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="gridConfig">Grid Configuration</label>
+      <select
+        id="gridConfig"
+        class="form-control form-control-sm position-static"
+        (change)="onGridStateClicked($event.target.value)"
+        [(ngModel)]="selectedGridConfigId"
+      >
+        <option *ngFor="let gridConfig of gridConfigs" [value]="gridConfig.id">
+          {{ gridConfig.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade bd-example-modal-sm"
+  id="saveGridConfigModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="saveGridConfigModal"
+  aria-hidden="true"
+>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="gridConfigName">Grid Config Name</label>
+          <input
+            id="gridConfigName"
+            class="form-control form-control-sm position-static"
+            placeholder="Name"
+            [(ngModel)]="newGridConfigName"
+          />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary btn-sm"
+          data-dismiss="modal"
+          (click)="this.newGridConfigName = ''"
+        >
+          Close
+        </button>
+        <button
+          data-dismiss="modal"
+          type="button"
+          class="btn btn-primary btn-sm"
+          (click)="saveGridConfig()"
+        >
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
